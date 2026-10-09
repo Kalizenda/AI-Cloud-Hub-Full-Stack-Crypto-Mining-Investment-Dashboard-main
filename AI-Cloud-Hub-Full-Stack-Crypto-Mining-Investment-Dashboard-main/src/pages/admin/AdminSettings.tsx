@@ -1,0 +1,497 @@
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Switch } from "@/components/ui/switch";
+import { toast } from "sonner";
+import { ArrowLeft, Loader2, Building2, Percent, Save, Trash2, ShieldAlert, Eye, EyeOff, CreditCard, Plus, X, AlertTriangle } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+
+const RESET_PASSWORD = "2580";
+
+interface PaymentMethod {
+  id: string;
+  name: string;
+  icon: string;
+  enabled: boolean;
+  description: string;
+  details?: Record<string, string>;
+}
+
+const DEFAULT_PAYMENT_METHODS: PaymentMethod[] = [
+  {
+    id: "bank_transfer",
+    name: "Bank Transfer",
+    icon: "building",
+    enabled: true,
+    description: "Pay by bank transfer",
+    details: {
+      bank_name: "",
+      account_name: "",
+      account_number: "",
+      branch: "",
+    },
+  },
+];
+
+const AdminSettings = () => {
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [commission, setCommission] = useState({ level_1: 10, level_2: 5, level_3: 2 });
+  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
+  const [nowpayments, setNowpayments] = useState({ enabled: false, api_key: "" });
+  const [withdrawalMethods, setWithdrawalMethods] = useState<any[]>([]);
+
+  // Server restart state
+  const [resetDialog, setResetDialog] = useState(false);
+  const [resetPassword, setResetPassword] = useState("");
+  const [showResetPw, setShowResetPw] = useState(false);
+  const [resetConfirmText, setResetConfirmText] = useState("");
+  const [resetting, setResetting] = useState(false);
+
+  useEffect(() => {
+    const fetch = async () => {
+      const [comRes, methodsRes, cryptoRes, wmRes] = await Promise.all([
+        supabase.from("platform_settings").select("value").eq("key", "commission_rates").maybeSingle(),
+        supabase.from("platform_settings").select("value").eq("key", "payment_methods").maybeSingle(),
+        supabase.from("platform_settings").select("value").eq("key", "nowpayments_settings").maybeSingle(),
+        supabase.from("withdrawal_methods").select("*").order("id"),
+      ]);
+      if (comRes.data?.value) setCommission(comRes.data.value as any);
+      if (methodsRes.data?.value) {
+        const configuredMethods = methodsRes.data.value as unknown as PaymentMethod[];
+        const bankTransfer = configuredMethods.find((method) => method.id === "bank_transfer");
+        setPaymentMethods(
+          bankTransfer
+            ? configuredMethods.map((method) =>
+                method.id === "bank_transfer"
+                  ? {
+                      ...method,
+                      details: {
+                        bank_name: "",
+                        account_name: "",
+                        account_number: "",
+                        branch: "",
+                        ...method.details,
+                      },
+                    }
+                  : method,
+              )
+            : [...DEFAULT_PAYMENT_METHODS, ...configuredMethods],
+        );
+      } else {
+        setPaymentMethods(DEFAULT_PAYMENT_METHODS);
+      }
+      if (cryptoRes.data?.value) setNowpayments(cryptoRes.data.value as any);
+      if (wmRes.data) setWithdrawalMethods(wmRes.data);
+      setLoading(false);
+    };
+    fetch();
+  }, []);
+
+  const handleSave = async () => {
+    setSaving(true);
+    const results = await Promise.all([
+      supabase.from("platform_settings").update({ value: commission as any, updated_at: new Date().toISOString() }).eq("key", "commission_rates"),
+      supabase.from("platform_settings").upsert({ key: "payment_methods", value: paymentMethods as any, updated_at: new Date().toISOString() }, { onConflict: "key" }),
+      supabase.from("platform_settings").update({ value: nowpayments as any, updated_at: new Date().toISOString() }).eq("key", "nowpayments_settings"),
+      ...withdrawalMethods.map(m =>
+        supabase.from("withdrawal_methods").update({ is_active: m.is_active }).eq("id", m.id)
+      )
+    ]);
+    setSaving(false);
+    const failedResult = results.find((result) => result.error);
+    if (failedResult?.error) {
+      toast.error(`Failed to save settings: ${failedResult.error.message}`);
+      return;
+    }
+    toast.success("Settings saved!");
+  };
+
+  const handleSavePaymentMethods = async () => {
+    const incompleteMethod = paymentMethods.find(
+      (method) =>
+        method.enabled &&
+        (!method.name.trim() ||
+          !Object.values(method.details ?? {}).some((value) => value.trim())),
+    );
+    if (incompleteMethod) {
+      toast.error("Enabled payment methods need a name and at least one payment detail.");
+      return;
+    }
+
+    setSaving(true);
+    const { error } = await supabase.from("platform_settings").upsert(
+      {
+        key: "payment_methods",
+        value: paymentMethods as any,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: "key" },
+    );
+    setSaving(false);
+    if (error) {
+      toast.error(`Failed to save payment methods: ${error.message}`);
+      return;
+    }
+    toast.success("Payment methods saved!");
+  };
+
+  const addPaymentMethod = () => {
+    const id = `method_${Date.now()}`;
+    setPaymentMethods(prev => [...prev, { id, name: "", icon: "smartphone", enabled: true, description: "", details: {} }]);
+  };
+
+  const removePaymentMethod = (id: string) => {
+    setPaymentMethods(prev => prev.filter(m => m.id !== id));
+  };
+
+  const updateMethod = (id: string, field: string, value: any) => {
+    setPaymentMethods(prev => prev.map(m => m.id === id ? { ...m, [field]: value } : m));
+  };
+
+  const updateMethodDetail = (id: string, key: string, value: string) => {
+    setPaymentMethods(prev => prev.map(m => {
+      if (m.id !== id) return m;
+      return { ...m, details: { ...m.details, [key]: value } };
+    }));
+  };
+
+  const renameMethodDetail = (id: string, oldKey: string, newKey: string) => {
+    const key = newKey.trim();
+    if (!key || key === oldKey) return;
+    setPaymentMethods((prev) =>
+      prev.map((method) => {
+        if (method.id !== id || !method.details || key in method.details) return method;
+        const details = { ...method.details };
+        details[key] = details[oldKey];
+        delete details[oldKey];
+        return { ...method, details };
+      }),
+    );
+  };
+
+  const moveWalletLabelToValue = (id: string, oldKey: string) => {
+    setPaymentMethods((prev) =>
+      prev.map((method) => {
+        if (!method.details || method.id !== id || method.details[oldKey]?.trim()) {
+          return method;
+        }
+        const details = { ...method.details };
+        delete details[oldKey];
+        let label = "Wallet Address";
+        let suffix = 2;
+        while (label in details) {
+          label = `Wallet Address ${suffix}`;
+          suffix++;
+        }
+        details[label] = oldKey;
+        return { ...method, details };
+      }),
+    );
+  };
+
+  const addMethodDetail = (id: string) => {
+    const key = prompt("Enter a label for this detail (for example, Wallet Address). Enter the address in the value field.");
+    if (!key) return;
+    updateMethodDetail(id, key, "");
+  };
+
+  const removeMethodDetail = (id: string, key: string) => {
+    setPaymentMethods(prev => prev.map(m => {
+      if (m.id !== id) return m;
+      const details = { ...m.details };
+      delete details[key];
+      return { ...m, details };
+    }));
+  };
+
+  const handleServerReset = async () => {
+    if (resetPassword !== RESET_PASSWORD) { toast.error("Incorrect password"); return; }
+    if (resetConfirmText !== "RESET ALL DATA") { toast.error('Type "RESET ALL DATA" to confirm'); return; }
+    setResetting(true);
+    try {
+      const { data, error } = await supabase.rpc("admin_reset_all_data" as any);
+      if (error) throw error;
+      if ((data as any)?.success === false) throw new Error((data as any)?.error);
+      toast.success("All user data has been deleted. The platform has been reset.");
+      setResetDialog(false); setResetPassword(""); setResetConfirmText("");
+    } catch (err: any) { toast.error(err.message || "Reset failed"); }
+    setResetting(false);
+  };
+
+  if (loading) return <div className="p-6 space-y-4"><Skeleton className="h-40" /><Skeleton className="h-40" /></div>;
+
+  return (
+    <div className="p-6 space-y-6 animate-fade-in max-w-4xl mx-auto">
+      <div className="flex items-center gap-3">
+        <Link to="/admin"><Button variant="ghost" size="icon"><ArrowLeft className="w-5 h-5" /></Button></Link>
+        <h1 className="text-2xl font-heading font-bold text-foreground">Platform Settings</h1>
+      </div>
+
+      {/* Payment Methods */}
+      <Card className="shadow-neu border-0">
+        <CardHeader className="pb-2">
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-sm font-heading flex items-center gap-2">
+              <CreditCard className="w-4 h-4 text-primary" /> Payment Methods
+            </CardTitle>
+            <Button size="sm" variant="outline" className="rounded-xl text-xs h-8" onClick={addPaymentMethod}>
+              <Plus className="w-3 h-3 mr-1" /> Add Method
+            </Button>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Add bank account details or cryptocurrency wallet addresses here. For each detail, enter a label (such as Wallet Address) and its value. These details are shown to users on the Deposit page.
+          </p>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {/* Cryptocurrency */}
+          <div className="border border-border rounded-xl p-4 space-y-3 bg-muted/10">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3 flex-1">
+                <Switch 
+                  checked={nowpayments.enabled} 
+                  onCheckedChange={(v) => setNowpayments(prev => ({ ...prev, enabled: v }))} 
+                />
+                <span className="font-heading font-bold text-sm text-foreground">
+                  Cryptocurrency
+                </span>
+                <span className="bg-primary/10 text-primary text-[10px] font-semibold px-2 py-0.5 rounded-full">
+                  System Default
+                </span>
+              </div>
+            </div>
+            {nowpayments.enabled && (
+              <div className="text-[11px] text-muted-foreground bg-muted/40 p-3 rounded-lg border border-border/60">
+                <span className="font-semibold text-foreground block mb-0.5">API Key Configuration</span>
+                The Cryptocurrency API Key is securely managed in your Supabase project secrets as <code className="bg-muted px-1 py-0.5 rounded font-mono text-[10px] text-primary">NOWPAYMENTS_API_KEY</code>.
+              </div>
+            )}
+          </div>
+
+          {paymentMethods.map((method) => (
+            <div key={method.id} className="border border-border rounded-xl p-4 space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3 flex-1">
+                  <Switch checked={method.enabled} onCheckedChange={(v) => updateMethod(method.id, "enabled", v)} />
+                  <Input className="rounded-lg h-8 text-sm font-semibold max-w-[180px]" placeholder="Method name" value={method.name} onChange={(e) => updateMethod(method.id, "name", e.target.value)} />
+                </div>
+                {method.id !== "bank_transfer" && (
+                  <Button size="icon" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => removePaymentMethod(method.id)}>
+                    <X className="w-4 h-4" />
+                  </Button>
+                )}
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                <div className="space-y-1">
+                  <Label className="text-xs">Description</Label>
+                  <Input className="rounded-lg h-8 text-xs" placeholder="Short description" value={method.description} onChange={(e) => updateMethod(method.id, "description", e.target.value)} />
+                </div>
+                <div className="space-y-1">
+                  <Label className="text-xs">Icon (building / smartphone)</Label>
+                  <Input className="rounded-lg h-8 text-xs" placeholder="building" value={method.icon} onChange={(e) => updateMethod(method.id, "icon", e.target.value)} />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label className="text-xs font-semibold">Payment details shown to users</Label>
+                  <Button size="sm" variant="ghost" className="h-6 text-xs text-primary" onClick={() => addMethodDetail(method.id)}>
+                    <Plus className="w-3 h-3 mr-1" /> Add Field
+                  </Button>
+                </div>
+                {method.details && Object.entries(method.details).map(([key, val]) => (
+                  <div key={key} className="flex items-center gap-2">
+                    <Input
+                      aria-label="Payment detail label"
+                      className="rounded-lg h-7 text-xs w-36"
+                      defaultValue={key.replace(/_/g, " ")}
+                      onBlur={(e) => renameMethodDetail(method.id, key, e.target.value)}
+                    />
+                    <Input
+                      aria-label={`Value for ${key.replace(/_/g, " ")}`}
+                      className="rounded-lg h-7 text-xs flex-1"
+                      placeholder="Enter payment detail value"
+                      value={val}
+                      onChange={(e) => updateMethodDetail(method.id, key, e.target.value)}
+                    />
+                    {!val.trim() && /^[1-9A-HJ-NP-Za-km-z]{16,64}$/.test(key) && (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="h-7 text-[10px]"
+                        onClick={() => moveWalletLabelToValue(method.id, key)}
+                      >
+                        Move label to wallet value
+                      </Button>
+                    )}
+                    {!(method.id === "bank_transfer" && ["bank_name", "account_name", "account_number", "branch"].includes(key)) && (
+                      <Button size="icon" variant="ghost" className="h-6 w-6 text-destructive" onClick={() => removeMethodDetail(method.id, key)}>
+                        <X className="w-3 h-3" />
+                      </Button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+          <Button
+            onClick={handleSavePaymentMethods}
+            className="w-full rounded-xl"
+            variant="outline"
+            disabled={saving}
+          >
+            {saving && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+            Save Payment Methods
+          </Button>
+        </CardContent>
+      </Card>
+
+      {/* Withdrawal Methods */}
+      <Card className="shadow-neu border-0">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-heading flex items-center gap-2">
+            <CreditCard className="w-4 h-4 text-primary" /> Withdrawal Methods
+          </CardTitle>
+          <p className="text-xs text-muted-foreground">Configure which payout methods are active for user withdrawals</p>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {withdrawalMethods.map((method) => {
+            const isCrypto = method.id === "crypto";
+            return (
+              <div key={method.id} className="border border-border rounded-xl p-4 space-y-3 bg-muted/5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3 flex-1">
+                    <Switch
+                      checked={method.is_active}
+                      onCheckedChange={(checked) => {
+                        setWithdrawalMethods(prev =>
+                          prev.map(m => m.id === method.id ? { ...m, is_active: checked } : m)
+                        );
+                      }}
+                    />
+                    <div className="flex flex-col">
+                      <span className="font-heading font-bold text-sm text-foreground">
+                        {method.name}
+                      </span>
+                      <span className="text-[10px] text-muted-foreground">
+                        {method.id === "bank_transfer"
+                          ? "Users enter bank name, account number, and IBAN."
+                          : "Users enter public cryptocurrency wallet address and select target coin."}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </CardContent>
+      </Card>
+
+      {/* Commission Rates */}
+      <Card className="shadow-neu border-0">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-heading flex items-center gap-2">
+            <Percent className="w-4 h-4 text-primary" /> Commission Rates
+          </CardTitle>
+          <p className="text-xs text-muted-foreground">Set referral commission percentages for each tier</p>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-3 gap-4">
+            <div className="space-y-1">
+              <Label className="text-xs">Level 1 (%)</Label>
+              <Input type="number" min="0" max="100" className="rounded-xl h-9" value={commission.level_1} onChange={(e) => setCommission({ ...commission, level_1: Number(e.target.value) })} />
+            </div>
+            <div className="space-y-1">
+              <Label className="text-xs">Level 2 (%)</Label>
+              <Input type="number" min="0" max="100" className="rounded-xl h-9" value={commission.level_2} onChange={(e) => setCommission({ ...commission, level_2: Number(e.target.value) })} />
+            </div>
+            <div className="space-y-1">
+              <Label className="text-xs">Level 3 (%)</Label>
+              <Input type="number" min="0" max="100" className="rounded-xl h-9" value={commission.level_3} onChange={(e) => setCommission({ ...commission, level_3: Number(e.target.value) })} />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Button onClick={handleSave} className="w-full rounded-xl h-12 gradient-primary text-primary-foreground font-semibold" disabled={saving}>
+        {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
+        Save All Settings
+      </Button>
+
+      {/* Danger Zone */}
+      <Card className="shadow-neu border-destructive/40 bg-destructive/5">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-heading flex items-center gap-2 text-destructive">
+            <ShieldAlert className="w-4 h-4" /> Danger Zone
+          </CardTitle>
+          <p className="text-xs text-muted-foreground">Irreversible actions that affect the entire platform</p>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <div className="bg-destructive/10 border border-destructive/30 rounded-xl p-4 space-y-2">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-sm font-bold text-destructive">Reset All User Data</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Permanently deletes all user profiles, wallets, transactions, packages, device logs, notifications, and referrals.
+                  <span className="text-destructive font-semibold"> This cannot be undone.</span>
+                </p>
+              </div>
+              <Button variant="destructive" size="sm" className="rounded-xl shrink-0" onClick={() => setResetDialog(true)}>
+                <Trash2 className="w-4 h-4 mr-1" /> Reset
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Reset Dialog */}
+      <Dialog open={resetDialog} onOpenChange={(o) => { if (!resetting) { setResetDialog(o); if (!o) { setResetPassword(""); setResetConfirmText(""); } } }}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-destructive"><Trash2 className="w-5 h-5" /><AlertTriangle className="w-5 h-5" />Reset All User Data</DialogTitle>
+            <DialogDescription>This will permanently delete ALL user and admin data from the platform. This action is irreversible.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="bg-destructive/10 border border-destructive/30 rounded-xl p-3 text-xs text-destructive space-y-1">
+              <p className="font-bold">The following will be deleted:</p>
+              <ul className="list-disc pl-4 space-y-0.5 text-muted-foreground">
+                <li>All user profiles & admin profiles</li>
+                <li>All wallets & transaction history</li>
+                <li>All packages, commissions & referrals</li>
+                <li>All device logs & notifications</li>
+                <li>All deposits & withdrawal requests</li>
+                <li>All admin alerts</li>
+              </ul>
+            </div>
+            <div className="space-y-1">
+              <Label className="text-xs font-semibold">Admin Password</Label>
+              <div className="relative">
+                <Input type={showResetPw ? "text" : "password"} placeholder="Enter password" className="rounded-xl h-9 pr-10" value={resetPassword} onChange={e => setResetPassword(e.target.value)} />
+                <button type="button" className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground" onClick={() => setShowResetPw(v => !v)}>
+                  {showResetPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+            <div className="space-y-1">
+              <Label className="text-xs font-semibold">Type "RESET ALL DATA" to confirm</Label>
+              <Input placeholder='RESET ALL DATA' className="rounded-xl h-9 font-mono" value={resetConfirmText} onChange={e => setResetConfirmText(e.target.value)} />
+            </div>
+          </div>
+          <DialogFooter className="flex-col gap-2 sm:flex-col">
+            <Button variant="destructive" className="w-full rounded-xl" disabled={resetting || resetPassword !== RESET_PASSWORD || resetConfirmText !== "RESET ALL DATA"} onClick={handleServerReset}>
+              {resetting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Trash2 className="w-4 h-4 mr-2" />}
+              Delete All Data Permanently
+            </Button>
+            <Button variant="ghost" className="w-full rounded-xl" onClick={() => setResetDialog(false)} disabled={resetting}>Cancel</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+};
+
+export default AdminSettings;

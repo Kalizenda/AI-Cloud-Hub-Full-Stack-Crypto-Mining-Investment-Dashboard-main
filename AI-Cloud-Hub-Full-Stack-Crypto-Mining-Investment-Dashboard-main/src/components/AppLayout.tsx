@@ -74,7 +74,7 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
       <aside className="fixed inset-y-0 left-0 z-30 hidden w-60 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground lg:flex">
         <Link to="/dashboard" className="flex h-[72px] items-center gap-3 border-b border-sidebar-border px-6">
           <img src="/logo.webp" alt="" className="h-9 w-9 object-contain" />
-          <span className="font-heading text-sm font-bold">AI Cloud Hub</span>
+          <span className="font-heading text-sm font-bold">ZENDA AI CLOUD CRYPTOCURRENCY MINING</span>
         </Link>
         <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-5">
           {[

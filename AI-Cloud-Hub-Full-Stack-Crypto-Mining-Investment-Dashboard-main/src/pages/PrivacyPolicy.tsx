@@ -20,7 +20,7 @@ const PrivacyPolicy = () => {
 
           <section>
             <h2 className="text-lg font-heading font-bold">1. Information We Collect</h2>
-            <p>When you register and use AICloudHub, we collect:</p>
+            <p>When you register and use ZENDA AI CLOUD CRYPTOCURRENCY MINING, we collect:</p>
             <ul className="list-disc pl-5 space-y-1 text-sm">
               <li><strong>Account Information:</strong> Name, email address, phone number, and password.</li>
               <li><strong>Financial Information:</strong> Bank account details, deposit/withdrawal history, and wallet balances.</li>

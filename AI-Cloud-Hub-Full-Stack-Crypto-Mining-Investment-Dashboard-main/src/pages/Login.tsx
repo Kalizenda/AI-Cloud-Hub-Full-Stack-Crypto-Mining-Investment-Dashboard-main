@@ -48,11 +48,11 @@ const Login = () => {
           <div className="flex flex-col items-center gap-3 mb-2">
             <img
               src="/logo.webp"
-              alt="AI Cloud Hub Logo"
+              alt="ZENDA AI CLOUD CRYPTOCURRENCY MINING Logo"
               className="w-20 h-20 object-contain drop-shadow-lg"
             />
           </div>
-          <h1 className="text-2xl font-heading font-bold text-foreground">AI Cloud Hub</h1>
+          <h1 className="text-2xl font-heading font-bold text-foreground">ZENDA AI CLOUD CRYPTOCURRENCY MINING</h1>
           <p className="text-sm text-muted-foreground mt-1">Welcome back</p>
         </div>
 

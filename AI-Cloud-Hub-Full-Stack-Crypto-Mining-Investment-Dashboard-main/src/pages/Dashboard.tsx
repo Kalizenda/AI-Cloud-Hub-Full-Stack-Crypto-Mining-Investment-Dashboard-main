@@ -118,7 +118,7 @@ const quickActions: {
       label: "Group",
       icon: Send,
       path: "#telegram",
-      external: "https://t.me/online_money_sri_lanka",
+      external: "https://t.me/+HTCb7c0aNpViMjNh",
     },
     { label: "Deposit", icon: Wallet, path: "/deposit" },
     { label: "Cash Out", icon: Banknote, path: "/withdraw" },
@@ -126,7 +126,7 @@ const quickActions: {
       label: "Support",
       icon: Headphones,
       path: "#support",
-      external: "https://t.me/aicloudhubxyz",
+      external: "https://t.me/Zendalionkito2",
     },
     { label: "About Us", icon: Info, path: "/about" },
   ];

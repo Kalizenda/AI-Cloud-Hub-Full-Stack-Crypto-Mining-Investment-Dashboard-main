@@ -7,14 +7,14 @@ const About = () => (
       <div className="w-16 h-16 rounded-full gradient-secondary mx-auto flex items-center justify-center shadow-lg">
         <Info className="w-8 h-8 text-secondary-foreground" />
       </div>
-      <h1 className="text-xl font-heading font-bold text-foreground mt-3">About AICloudHub</h1>
+      <h1 className="text-xl font-heading font-bold text-foreground mt-3">About ZENDA AI CLOUD CRYPTOCURRENCY MINING</h1>
       <p className="text-xs text-muted-foreground">Sri Lanka's #1 AI GPU Rental Platform</p>
     </div>
 
     {/* Description */}
     <div className="shadow-neu rounded-2xl bg-card p-5 space-y-3">
       <p className="text-sm text-foreground leading-relaxed">
-        AICloudHub is Sri Lanka's premier artificial intelligence cloud computing platform. We provide
+        ZENDA AI CLOUD CRYPTOCURRENCY MINING is Sri Lanka's premier artificial intelligence cloud computing platform. We provide
         cutting-edge GPU rental services, AI model hosting, and vector database solutions to
         businesses and individuals across the region.
       </p>
@@ -35,7 +35,7 @@ const About = () => (
           </div>
           <div>
             <p className="text-xs font-medium text-foreground">Address</p>
-            <p className="text-[11px] text-muted-foreground">42/B, Galle Road, Colombo 03, Sri Lanka</p>
+            <p className="text-[11px] text-muted-foreground">UK 24 Road Paint House</p>
           </div>
         </div>
         <div className="flex items-start gap-3">
@@ -44,7 +44,7 @@ const About = () => (
           </div>
           <div>
             <p className="text-xs font-medium text-foreground">Email</p>
-            <p className="text-[11px] text-muted-foreground">support@aicloudhub.com</p>
+            <p className="text-[11px] text-muted-foreground">chekwubechukwu989@gmail.com</p>
           </div>
         </div>
         <div className="flex items-start gap-3">
@@ -54,12 +54,12 @@ const About = () => (
           <div>
             <p className="text-xs font-medium text-foreground">Website</p>
             <a
-              href="https://www.aicloudhub.xyz"
+              href="https://ai-cloud-hub-full-stack-crypto-mining-investme--chekwubechukwu9.replit.app/dashboard"
               target="_blank"
               rel="noopener noreferrer"
               className="text-[11px] text-muted-foreground hover:text-primary transition-colors hover:underline block"
             >
-              www.aicloudhub.xyz
+              ai-cloud-hub-full-stack-crypto-mining-investme--chekwubechukwu9.replit.app/dashboard
             </a>
           </div>
         </div>

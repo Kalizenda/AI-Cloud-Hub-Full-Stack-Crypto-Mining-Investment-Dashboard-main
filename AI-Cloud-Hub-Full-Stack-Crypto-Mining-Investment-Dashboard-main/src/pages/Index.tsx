@@ -44,9 +44,9 @@ const Index = () => {
     <div className="app-page-enter min-h-screen overflow-hidden bg-background">
       <header className="sticky top-0 z-40 border-b border-border/80 bg-background/90 backdrop-blur-xl">
         <div className="mx-auto flex h-[68px] max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-          <Link to="/" className="flex items-center gap-2.5" aria-label="AI Cloud Hub home">
+          <Link to="/" className="flex items-center gap-2.5" aria-label="ZENDA AI CLOUD CRYPTOCURRENCY MINING home">
             <img src="/logo.webp" alt="" className="h-9 w-9 object-contain" />
-            <span className="font-heading text-sm font-bold tracking-tight text-foreground sm:text-base">AI Cloud Hub</span>
+            <span className="font-heading text-sm font-bold tracking-tight text-foreground sm:text-base">ZENDA AI CLOUD CRYPTOCURRENCY MINING</span>
           </Link>
 
           <nav className="hidden items-center gap-7 text-sm font-medium text-muted-foreground md:flex">
@@ -90,7 +90,7 @@ const Index = () => {
             <div className="max-w-2xl animate-fade-in">
               <span className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-foreground">
                 <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-                AI Cloud Hub
+                ZENDA AI CLOUD CRYPTOCURRENCY MINING
               </span>
               <h1 className="mt-6 max-w-[14ch] text-4xl font-bold leading-[1.08] tracking-tight text-foreground sm:text-5xl lg:text-[3.65rem]">
                 A clearer way to manage your <span className="text-primary">cloud portfolio.</span>
@@ -199,7 +199,7 @@ const Index = () => {
         <section className="bg-secondary text-secondary-foreground">
           <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 px-4 py-12 sm:px-6 md:flex-row md:items-center lg:px-8 lg:py-14">
             <div className="max-w-2xl">
-              <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">AI Cloud Hub</p>
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">ZENDA AI CLOUD CRYPTOCURRENCY MINING</p>
               <h2 className="mt-2 text-2xl font-bold sm:text-3xl">Manage your account with clarity.</h2>
               <p className="mt-2 text-sm leading-6 text-white/65">Create an account to explore the marketplace and access your account dashboard.</p>
             </div>
@@ -210,7 +210,7 @@ const Index = () => {
 
       <footer className="border-t border-border">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
-          <div className="flex items-center gap-2"><img src="/logo.webp" alt="" className="h-6 w-6 object-contain" /><span className="font-semibold text-foreground">AI Cloud Hub</span><span>© {new Date().getFullYear()}</span></div>
+          <div className="flex items-center gap-2"><img src="/logo.webp" alt="" className="h-6 w-6 object-contain" /><span className="font-semibold text-foreground">ZENDA AI CLOUD CRYPTOCURRENCY MINING</span><span>© {new Date().getFullYear()}</span></div>
           <nav className="flex flex-wrap gap-x-5 gap-y-2">
             <a href="#platform" className="hover:text-foreground">Platform</a>
             <Link to="/terms" className="hover:text-foreground">Terms</Link>

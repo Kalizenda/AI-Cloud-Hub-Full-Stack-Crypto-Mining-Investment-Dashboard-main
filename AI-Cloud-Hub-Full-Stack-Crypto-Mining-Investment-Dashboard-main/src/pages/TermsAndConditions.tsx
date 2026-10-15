@@ -20,7 +20,7 @@ const TermsAndConditions = () => {
 
           <section>
             <h2 className="text-lg font-heading font-bold">1. Acceptance of Terms</h2>
-            <p className="text-sm">By creating an account or logging into AICloudHub, you confirm that you have read, understood, and agree to be bound by these Terms & Conditions and our Privacy Policy. If you do not agree, you must not use the platform.</p>
+            <p className="text-sm">By creating an account or logging into ZENDA AI CLOUD CRYPTOCURRENCY MINING, you confirm that you have read, understood, and agree to be bound by these Terms & Conditions and our Privacy Policy. If you do not agree, you must not use the platform.</p>
           </section>
 
           <section>
@@ -114,7 +114,7 @@ const TermsAndConditions = () => {
           <section>
             <h2 className="text-lg font-heading font-bold">10. Platform Rights</h2>
             <ul className="list-disc pl-5 space-y-1 text-sm">
-              <li>AICloudHub reserves the right to modify, suspend, or terminate the platform at any time.</li>
+              <li>ZENDA AI CLOUD CRYPTOCURRENCY MINING reserves the right to modify, suspend, or terminate the platform at any time.</li>
               <li>We reserve the right to adjust package structures, commission rates, and withdrawal limits.</li>
               <li>We may freeze or close accounts found to be in violation of these terms without prior notice.</li>
               <li>Administrators may conduct audits of any account at any time.</li>
@@ -123,7 +123,7 @@ const TermsAndConditions = () => {
 
           <section>
             <h2 className="text-lg font-heading font-bold">11. Limitation of Liability</h2>
-            <p className="text-sm">AICloudHub is not liable for any loss of earnings, investment loss, or financial damages resulting from account bans, platform downtime, or changes to platform terms. Participation in the platform's earning programs is at your own risk.</p>
+            <p className="text-sm">ZENDA AI CLOUD CRYPTOCURRENCY MINING is not liable for any loss of earnings, investment loss, or financial damages resulting from account bans, platform downtime, or changes to platform terms. Participation in the platform's earning programs is at your own risk.</p>
           </section>
 
           <section>

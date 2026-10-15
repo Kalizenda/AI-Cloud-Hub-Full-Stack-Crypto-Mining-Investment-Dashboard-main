@@ -32,7 +32,7 @@ const ForgotPassword = () => {
             <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center">
               <Cloud className="w-5 h-5 text-primary-foreground" />
             </div>
-            <span className="text-2xl font-heading font-bold text-foreground">AICloudHub</span>
+            <span className="text-2xl font-heading font-bold text-foreground">ZENDA AI CLOUD CRYPTOCURRENCY MINING</span>
           </div>
         </div>
         <Card className="shadow-card border-border/50">

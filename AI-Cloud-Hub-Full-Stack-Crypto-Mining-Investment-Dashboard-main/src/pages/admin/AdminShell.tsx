@@ -252,7 +252,7 @@ const AdminShell = ({ children }: { children: React.ReactNode }) => {
         {/* Page Content */}
         <header className="sticky top-0 z-30 hidden h-[72px] items-center justify-between border-b border-border bg-card/90 px-8 backdrop-blur-xl lg:flex">
           <div>
-            <p className="text-xs font-medium text-muted-foreground">AI Cloud Hub / Operations</p>
+            <p className="text-xs font-medium text-muted-foreground">ZENDA AI CLOUD CRYPTOCURRENCY MINING / Operations</p>
             <h1 className="mt-0.5 font-heading text-lg font-bold text-foreground">Administration</h1>
           </div>
           <div className="flex items-center gap-2">

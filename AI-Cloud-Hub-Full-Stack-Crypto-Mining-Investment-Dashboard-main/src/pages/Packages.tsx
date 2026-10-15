@@ -133,7 +133,7 @@ const Packages = () => {
   return (
     <div className="animate-fade-in">
       <div className="px-4 py-4">
-        <h1 className="text-lg font-heading font-bold text-foreground mb-4">AI Cloud Market</h1>
+        <h1 className="text-lg font-heading font-bold text-foreground mb-4">ZENDA AI CLOUD CRYPTOCURRENCY MINING Market</h1>
 
         {/* Filter tabs */}
         <div className="flex gap-2 mb-4 overflow-x-auto scrollbar-hide">

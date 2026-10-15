@@ -1,6 +1,6 @@
-# AI Cloud Hub (Crypto Investment Platform)
+# ZENDA AI CLOUD CRYPTOCURRENCY MINING
 
-AI Cloud Hub is a web-based cryptocurrency mining & package investment platform. Users can buy investment packages, claim daily login rewards, manage referral structures, and make deposits/withdrawals. The project includes a robust administrative panel for platform management and AI-driven insights.
+ZENDA AI CLOUD CRYPTOCURRENCY MINING is a web-based cryptocurrency mining and package investment platform. Users can buy investment packages, claim daily login rewards, manage referral structures, and make deposits/withdrawals. The project includes an administrative panel for platform management and AI-driven insights.
 
 ## Tech Stack
 * **Frontend**: React (v18), Vite, TypeScript, Tailwind CSS, shadcn-ui
@@ -90,4 +90,3 @@ By default, the server will start on [http://localhost:8080](http://localhost:80
 Changes made via Lovable will be committed automatically to this repository. If you choose to push changes directly from your preferred IDE:
 1. Clone this repo and push changes. Pushed changes will be reflected in Lovable.
 2. Deployment can be executed by opening [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and selecting **Share > Publish**.
-

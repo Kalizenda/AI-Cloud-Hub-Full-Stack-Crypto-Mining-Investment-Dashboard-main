@@ -51,48 +51,48 @@ const PageTitleUpdater = () => {
 
   useEffect(() => {
     const titleMap: Record<string, string> = {
-      "/": "AI Cloud Hub | Cloud Investment Platform",
-      "/dashboard": "Dashboard | AI Cloud Hub",
-      "/login": "Login | AI Cloud Hub",
-      "/register": "Register | AI Cloud Hub",
-      "/privacy-policy": "Privacy Policy | AI Cloud Hub",
-      "/terms": "Terms & Conditions | AI Cloud Hub",
-      "/forgot-password": "Forgot Password | AI Cloud Hub",
-      "/reset-password": "Reset Password | AI Cloud Hub",
-      "/deposit": "Deposit Funds | AI Cloud Hub",
-      "/withdraw": "Withdraw Funds | AI Cloud Hub",
-      "/packages": "Investment Packages | AI Cloud Hub",
-      "/transactions": "Transaction Logs | AI Cloud Hub",
-      "/team": "My Team Network | AI Cloud Hub",
-      "/settings": "Account Settings | AI Cloud Hub",
-      "/daily-signin": "Daily Check-in Reward | AI Cloud Hub",
-      "/about": "About AI Cloud Technologies | AI Cloud Hub",
-      "/redeem": "Redeem Promo Code | AI Cloud Hub",
-      "/notifications": "Notifications & Updates | AI Cloud Hub",
-      "/bank-info": "Bank Account Details | AI Cloud Hub",
-      "/commission-details": "Referral Commissions | AI Cloud Hub",
-      "/earned-history": "Earning History | AI Cloud Hub",
-      "/admin": "Admin Dashboard | AI Cloud Hub",
-      "/admin/users": "User Accounts Management | AI Cloud Hub",
-      "/admin/deposits": "Deposit Approvals Queue | AI Cloud Hub",
-      "/admin/withdrawals": "Withdrawal Approvals Queue | AI Cloud Hub",
-      "/admin/packages": "Investment Package Manager | AI Cloud Hub",
-      "/admin/redeem-codes": "Redeem Codes Manager | AI Cloud Hub",
-      "/admin/sliders": "Homepage Sliders Settings | AI Cloud Hub",
-      "/admin/settings": "Global Platform Settings | AI Cloud Hub",
-      "/admin/user-packages": "User Investment Packages | AI Cloud Hub",
-      "/admin/alerts": "Critical Security Alerts | AI Cloud Hub",
+      "/": "ZENDA AI CLOUD CRYPTOCURRENCY MINING | Cryptocurrency Investment Platform",
+      "/dashboard": "Dashboard | ZENDA AI CLOUD CRYPTOCURRENCY MINING",
+      "/login": "Login | ZENDA AI CLOUD CRYPTOCURRENCY MINING",
+      "/register": "Register | ZENDA AI CLOUD CRYPTOCURRENCY MINING",
+      "/privacy-policy": "Privacy Policy | ZENDA AI CLOUD CRYPTOCURRENCY MINING",
+      "/terms": "Terms & Conditions | ZENDA AI CLOUD CRYPTOCURRENCY MINING",
+      "/forgot-password": "Forgot Password | ZENDA AI CLOUD CRYPTOCURRENCY MINING",
+      "/reset-password": "Reset Password | ZENDA AI CLOUD CRYPTOCURRENCY MINING",
+      "/deposit": "Deposit Funds | ZENDA AI CLOUD CRYPTOCURRENCY MINING",
+      "/withdraw": "Withdraw Funds | ZENDA AI CLOUD CRYPTOCURRENCY MINING",
+      "/packages": "Investment Packages | ZENDA AI CLOUD CRYPTOCURRENCY MINING",
+      "/transactions": "Transaction Logs | ZENDA AI CLOUD CRYPTOCURRENCY MINING",
+      "/team": "My Team Network | ZENDA AI CLOUD CRYPTOCURRENCY MINING",
+      "/settings": "Account Settings | ZENDA AI CLOUD CRYPTOCURRENCY MINING",
+      "/daily-signin": "Daily Check-in Reward | ZENDA AI CLOUD CRYPTOCURRENCY MINING",
+      "/about": "About ZENDA AI CLOUD CRYPTOCURRENCY MINING",
+      "/redeem": "Redeem Promo Code | ZENDA AI CLOUD CRYPTOCURRENCY MINING",
+      "/notifications": "Notifications & Updates | ZENDA AI CLOUD CRYPTOCURRENCY MINING",
+      "/bank-info": "Bank Account Details | ZENDA AI CLOUD CRYPTOCURRENCY MINING",
+      "/commission-details": "Referral Commissions | ZENDA AI CLOUD CRYPTOCURRENCY MINING",
+      "/earned-history": "Earning History | ZENDA AI CLOUD CRYPTOCURRENCY MINING",
+      "/admin": "Admin Dashboard | ZENDA AI CLOUD CRYPTOCURRENCY MINING",
+      "/admin/users": "User Accounts Management | ZENDA AI CLOUD CRYPTOCURRENCY MINING",
+      "/admin/deposits": "Deposit Approvals Queue | ZENDA AI CLOUD CRYPTOCURRENCY MINING",
+      "/admin/withdrawals": "Withdrawal Approvals Queue | ZENDA AI CLOUD CRYPTOCURRENCY MINING",
+      "/admin/packages": "Investment Package Manager | ZENDA AI CLOUD CRYPTOCURRENCY MINING",
+      "/admin/redeem-codes": "Redeem Codes Manager | ZENDA AI CLOUD CRYPTOCURRENCY MINING",
+      "/admin/sliders": "Homepage Sliders Settings | ZENDA AI CLOUD CRYPTOCURRENCY MINING",
+      "/admin/settings": "Global Platform Settings | ZENDA AI CLOUD CRYPTOCURRENCY MINING",
+      "/admin/user-packages": "User Investment Packages | ZENDA AI CLOUD CRYPTOCURRENCY MINING",
+      "/admin/alerts": "Critical Security Alerts | ZENDA AI CLOUD CRYPTOCURRENCY MINING",
     };
 
     const path = location.pathname;
     
     // Dynamic matching for admin user detail page
     if (path.startsWith("/admin/users/")) {
-      document.title = "User Details | AI Cloud Hub";
+      document.title = "User Details | ZENDA AI CLOUD CRYPTOCURRENCY MINING";
       return;
     }
 
-    document.title = titleMap[path] || "AI Cloud Hub";
+    document.title = titleMap[path] || "ZENDA AI CLOUD CRYPTOCURRENCY MINING";
   }, [location]);
 
   return null;
